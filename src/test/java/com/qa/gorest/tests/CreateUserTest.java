@@ -51,7 +51,7 @@ public class CreateUserTest extends BaseTest {
 							.extract()
 							.path("id");
 		
-		System.out.println("created Id is:" + id);
+		System.out.println("created Id is  :" + id);
 		
 		//.verify whether the user created or not with Get Call(with current id).
 		
@@ -74,6 +74,7 @@ public class CreateUserTest extends BaseTest {
 							.body(matchesJsonSchemaInClasspath("createuserschema.json"));
 		
 		//System.out.println("created Id is:" + id);
+		System.out.println("End Test");
 	}
 
 }
