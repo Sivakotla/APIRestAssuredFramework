@@ -38,7 +38,7 @@ public class BaseTest {
 		prop = config.intiProp();
 		this.baseURI = baseURI;
 		//String baseURI = prop.getProperty("baseURI");
-		//rc = new RestClient(prop, baseURI);
+		rc = new RestClient(prop, baseURI);
 	}
 
 }
