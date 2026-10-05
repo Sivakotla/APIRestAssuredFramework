@@ -54,8 +54,8 @@ public class CreateUserTest extends BaseTest {
 		System.out.println("created Id is  :" + id);
 		
 		//.verify whether the user created or not with Get Call(with current id).
-		
-		rc.get(GOREST_ENDPOINT+"/"+id,true, true)
+		RestClient rc1 = new RestClient(prop, baseURI);
+		rc1.get(GOREST_ENDPOINT+"/"+id,true, true)
 			.then().log().all()
 			.assertThat()
 			.statusCode(APIHTTPStatus.OK_200.getCode());
