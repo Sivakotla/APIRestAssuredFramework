@@ -32,16 +32,16 @@ public class ConfigurationManager {
 				switch (envName.toLowerCase()) {
 
 				case "qa":
-					ip = new FileInputStream(".src/test/resources/config/qa.config.properties");
+					ip = new FileInputStream("./src/test/resources/config/qa.config.properties");
 					break;
 				case "stage":
-					ip = new FileInputStream(".src/test/resources/config/stage.config.properties");
+					ip = new FileInputStream("./src/test/resources/config/stage.config.properties");
 					break;
 				case "dev":
-					ip = new FileInputStream(".src/test/resources/config/dev.config.properties");
+					ip = new FileInputStream("./src/test/resources/config/dev.config.properties");
 					break;
 				case "prod":
-					ip = new FileInputStream(".src/test/resources/config/config.properties");
+					ip = new FileInputStream("./src/test/resources/config/config.properties");
 					break;
 
 				default:
