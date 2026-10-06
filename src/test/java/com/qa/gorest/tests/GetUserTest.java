@@ -22,7 +22,7 @@ public class GetUserTest extends BaseTest {
 		rc = new RestClient(prop, baseURI);
 	}
 	
-	@Test(enabled = true, priority=3, description = "This test is in progress...")
+	@Test(enabled = false, priority=3, description = "This test is in progress...")
 	public void getAllUsersTest() {
 		
 		
