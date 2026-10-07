@@ -1,76 +1,93 @@
-pipeline {
+pipeline 
+{
     agent any
-
-    tools {
-        maven 'maven'
+    
+    tools{
+    	maven 'maven'
+        }
+        
+    environment{
+   
+        BUILD_NUMBER = "${BUILD_NUMBER}"
+   
     }
+    
 
-    stages {
-
-        stage('Build') {
-            steps {
-                git 'https://github.com/jglick/simple-maven-project-with-tests.git'
-
-                sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+    stages 
+    {
+        stage('Build') 
+        {
+            steps
+            {
+                 git 'https://github.com/jglick/simple-maven-project-with-tests.git'
+                 bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
-
-            post {
-                success {
+            post 
+            {
+                success
+                {
                     junit '**/target/surefire-reports/TEST-*.xml'
-                    archiveArtifacts artifacts: 'target/*.jar'
+                    archiveArtifacts 'target/*.jar'
                 }
             }
         }
 
-        stage('Deploy to QA') {
-            steps {
-                echo 'deploy to qa done'
+        
+        
+        stage("Deploy to QA"){
+            steps{
+                echo("deploy to qa done")
             }
         }
-
-        stage('Regression API Automation Test') {
-            steps {
-                catchError(
-                    buildResult: 'SUCCESS',
-                    stageResult: 'FAILURE'
-                ) {
-                    git 'https://github.com/naveenanimation20/June2023RestAssuredFramework.git'
-
-                    sh '''
-                        mvn clean test \
-                        -Dsurefire.suiteXmlFiles=src/test/resources/testrunners/testng_regression.xml
-                    '''
-                }
+             
+             
+                
+                
+      stage('Run Docker Image with Regression Tests') {
+    steps {
+        script {
+            def suiteXmlFilePath = 'src/test/resources/testrunners/testng_regression.xml'
+            def dockerCommand = """
+                docker run --name apitesting${BUILD_NUMBER} \
+                -v "${WORKSPACE}/reports:/app/reports" \
+                naveenkhunteta/apitestnewone:latest \
+                /bin/bash -c "mvn test -Dsurefire.suiteXmlFiles=${suiteXmlFilePath}"
+            """
+            
+            def exitCode = bat(script: dockerCommand, returnStatus: true)
+            
+            if (exitCode != 0) {
+                currentBuild.result = 'FAILURE'
             }
-        }
-
-        stage('Publish Allure Reports') {
-            steps {
-                script {
-                    allure([
-                        includeProperties: false,
-                        jdk: '',
-                        properties: [],
-                        reportBuildPolicy: 'ALWAYS ',
-                        results: [[path: 'allure-results']]
-                    ])
-                }
-            }
-        }
-
-        stage('Publish Extent Report') {
-            steps {
-                publishHTML([
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'reports',
-                    reportFiles: 'TestExecutionReport.html',
-                    reportName: 'HTML Regression Extent Report',
-                    reportTitles: 'Regression Test Report'
-                ])
-            }
+            bat "docker start apitesting${BUILD_NUMBER}"
+            bat "docker cp apitesting${BUILD_NUMBER}:/app/target/APIExecutionReport.html ${WORKSPACE}/target"
+            bat "docker rm -f apitesting${BUILD_NUMBER}"
         }
     }
 }
+<<<<<<< HEAD:Jenkinsfile
  
+=======
+
+
+
+		
+		stage('Publish Regression Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: false, 
+                                  reportDir: 'target', 
+                                  reportFiles: 'APIExecutionReport.html', 
+                                  reportName: 'API HTML Regression Extent Report', 
+                                  reportTitles: ''])
+            }
+        }
+        
+        
+         
+
+         
+    }
+}
+>>>>>>> c7927e3 (created and update some file info):jenkinsfile 
