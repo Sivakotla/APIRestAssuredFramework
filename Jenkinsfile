@@ -65,9 +65,7 @@ pipeline
         }
     }
 }
-<<<<<<< HEAD:Jenkinsfile
- 
-=======
+
 
 
 
@@ -90,4 +88,4 @@ pipeline
          
     }
 }
->>>>>>> c7927e3 (created and update some file info):jenkinsfile 
+
